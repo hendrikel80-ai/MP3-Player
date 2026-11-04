@@ -37,7 +37,8 @@ Playlists bleiben erhalten.
 
 ### Feste Download-Version (Release) erstellen
 
-Für einen dauerhaften Download-Link ein Tag pushen:
+Auf GitHub unter **Actions → „APK bauen“ → „Run workflow“** bei *Release erstellen* eine Version
+eintragen (z. B. `v1.1.0`) und starten. Alternativ ein Tag pushen:
 
 ```bash
 git tag v1.0.0
