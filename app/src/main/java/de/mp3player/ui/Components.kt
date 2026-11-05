@@ -284,7 +284,8 @@ fun MiniPlayer(song: Song, state: PlayerState, actions: UiActions) {
                 Column(Modifier.weight(1f)) {
                     Text(song.title, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodyLarge)
                     Text(
-                        song.artist, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        if (state.speed != 1f) "${formatSpeed(state.speed)} · ${song.artist}" else song.artist,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

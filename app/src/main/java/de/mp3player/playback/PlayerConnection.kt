@@ -26,6 +26,7 @@ data class PlayerState(
     val repeatMode: Int = Player.REPEAT_MODE_OFF,
     val queueIds: List<Long> = emptyList(),
     val queueIndex: Int = 0,
+    val speed: Float = 1f,
 )
 
 /** Verbindet die Oberfläche mit dem [PlaybackService]. */
@@ -76,6 +77,7 @@ class PlayerConnection(context: Context) {
             repeatMode = c.repeatMode,
             queueIds = (0 until c.mediaItemCount).map { c.getMediaItemAt(it).mediaId.toLongOrNull() ?: -1L },
             queueIndex = c.currentMediaItemIndex,
+            speed = c.playbackParameters.speed,
         )
     }
 
@@ -131,6 +133,7 @@ class PlayerConnection(context: Context) {
     }
     fun removeFromQueue(index: Int) = withController { it.removeMediaItem(index) }
     fun toggleShuffle() = withController { it.shuffleModeEnabled = !it.shuffleModeEnabled }
+    fun setSpeed(speed: Float) = withController { it.setPlaybackSpeed(speed) }
     fun cycleRepeat() = withController { c ->
         c.repeatMode = when (c.repeatMode) {
             Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL

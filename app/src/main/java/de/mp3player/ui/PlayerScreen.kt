@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,9 +29,14 @@ import androidx.compose.material.icons.filled.QueueMusic
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -55,6 +61,7 @@ import androidx.media3.common.Player
 import de.mp3player.data.GroupType
 import de.mp3player.data.Library
 import de.mp3player.data.Song
+import de.mp3player.playback.PlaybackService
 import de.mp3player.playback.PlayerState
 
 @Composable
@@ -189,7 +196,42 @@ private fun ColumnScope.PlayerBody(
                     )
                 }
             }
-            Spacer(Modifier.height(24.dp))
+            SpeedSelector(state.speed, vm::setSpeed, Modifier.align(Alignment.CenterHorizontally))
+            Spacer(Modifier.height(16.dp))
+}
+
+/** Knopf „1×“ mit Auswahl der Abspielgeschwindigkeit. */
+@Composable
+private fun SpeedSelector(speed: Float, onSelect: (Float) -> Unit, modifier: Modifier = Modifier) {
+    var open by remember { mutableStateOf(false) }
+    val changed = speed != 1f
+    Box(modifier) {
+        TextButton(onClick = { open = true }) {
+            Icon(
+                Icons.Filled.Speed, contentDescription = null,
+                tint = if (changed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.width(6.dp))
+            Text(
+                "Geschwindigkeit ${formatSpeed(speed)}",
+                color = if (changed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            PlaybackService.SPEEDS.forEach { s ->
+                DropdownMenuItem(
+                    text = { Text(formatSpeed(s)) },
+                    trailingIcon = { if (s == speed) Icon(Icons.Filled.Check, contentDescription = "Ausgewählt") },
+                    onClick = { open = false; onSelect(s) },
+                )
+            }
+        }
+    }
+}
+
+fun formatSpeed(speed: Float): String {
+    val text = if (speed == speed.toInt().toFloat()) speed.toInt().toString() else speed.toString().trimEnd('0')
+    return text.replace('.', ',') + "×"
 }
 
 @Composable

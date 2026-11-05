@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -26,6 +27,10 @@ import de.mp3player.MainActivity
 class PlaybackService : MediaSessionService() {
 
     companion object {
+        /** Wählbare Abspielgeschwindigkeiten. */
+        val SPEEDS = listOf(0.25f, 0.5f, 1f)
+        private const val KEY_SPEED = "speed"
+
         /** Systemkomponenten, die Sperrbildschirm, Schnelleinstellungen und Bluetooth steuern. */
         private val SYSTEM_PACKAGES = setOf(
             "android",
@@ -57,6 +62,16 @@ class PlaybackService : MediaSessionService() {
             .setHandleAudioBecomingNoisy(true) // Pause beim Abziehen der Kopfhörer
             .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
+
+        // Zuletzt gewählte Abspielgeschwindigkeit wiederherstellen und Änderungen merken
+        val prefs = getSharedPreferences("player", MODE_PRIVATE)
+        val savedSpeed = prefs.getFloat(KEY_SPEED, 1f)
+        if (savedSpeed in SPEEDS) player.setPlaybackSpeed(savedSpeed)
+        player.addListener(object : Player.Listener {
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+                prefs.edit().putFloat(KEY_SPEED, playbackParameters.speed).apply()
+            }
+        })
 
         val openApp = PendingIntent.getActivity(
             this, 0,

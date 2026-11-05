@@ -125,6 +125,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     fun seekTo(ms: Long) = player.seekTo(ms)
     fun toggleShuffle() = player.toggleShuffle()
     fun cycleRepeat() = player.cycleRepeat()
+    fun setSpeed(speed: Float) = player.setSpeed(speed)
     fun skipToQueueIndex(index: Int) = player.skipToQueueIndex(index)
     fun removeFromQueue(index: Int) = player.removeFromQueue(index)
 
