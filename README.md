@@ -19,6 +19,8 @@ Ein einfacher, werbefreier Musik-Player für die MP3s auf deinem Android-Handy.
 
 ## Installation auf dem Handy (für dich und deine Frau)
 
+👉 Ausführliche Schritt-für-Schritt-Anleitung: [INSTALLATION.md](INSTALLATION.md)
+
 Die App wird bei jedem Push automatisch von GitHub gebaut – du brauchst kein Android Studio.
 
 1. Auf GitHub im Repo auf **Actions** → den neuesten Lauf „APK bauen“ öffnen →

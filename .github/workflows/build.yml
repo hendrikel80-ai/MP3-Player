@@ -59,7 +59,9 @@ jobs:
           target_commitish: ${{ github.sha }}
           make_latest: true
           body: |
-            **Installation:** Die Datei `MP3-Player-release.apk` unten herunterladen, auf dem Handy antippen
+            📱 **Schritt-für-Schritt-Anleitung:** https://github.com/${{ github.repository }}/blob/${{ github.sha }}/INSTALLATION.md
+
+            **Kurz:** Die Datei `MP3-Player-release.apk` unten herunterladen, auf dem Handy antippen
             und „Installation aus unbekannten Quellen“ erlauben.
 
             Funktionen: Bibliothek nach Titel, Künstler, Album und Genre · Playlists aus Metadaten ·
