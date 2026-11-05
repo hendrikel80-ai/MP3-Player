@@ -28,7 +28,7 @@ class PlaybackService : MediaSessionService() {
 
     companion object {
         /** Wählbare Abspielgeschwindigkeiten. */
-        val SPEEDS = listOf(0.25f, 0.5f, 1f)
+        val SPEEDS = listOf(0.25f, 0.5f, 0.75f, 1f)
         private const val KEY_SPEED = "speed"
 
         /** Systemkomponenten, die Sperrbildschirm, Schnelleinstellungen und Bluetooth steuern. */

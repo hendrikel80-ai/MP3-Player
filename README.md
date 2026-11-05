@@ -17,7 +17,7 @@ Ein einfacher, werbefreier Musik-Player für die MP3s auf deinem Android-Handy.
   geschrieben; Cover und andere Tags bleiben erhalten.
 - Wiedergabe im **Hintergrund** mit Steuerung in der Benachrichtigung, auf dem Sperrbildschirm,
   per Kopfhörer, Bluetooth und im Auto.
-- **Abspielgeschwindigkeit** 0,25× / 0,5× / 1× (Tonhöhe bleibt gleich, Einstellung wird gemerkt).
+- **Abspielgeschwindigkeit** 0,25× / 0,5× / 0,75× / 1× (Tonhöhe bleibt gleich, Einstellung wird gemerkt).
 - Zufallswiedergabe, Wiederholen (alle / einen), Warteschlange („Als Nächstes abspielen“), Suche.
 - Album-Cover aus den MP3s, helles/dunkles Design passend zum Handy.
 - Neue MP3s werden automatisch erkannt.
