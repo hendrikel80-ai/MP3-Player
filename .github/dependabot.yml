@@ -1,0 +1,14 @@
+# Meldet monatlich neue Versionen von Bibliotheken und GitHub-Actions (inkl. Sicherheits-Updates)
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      alle-bibliotheken:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
