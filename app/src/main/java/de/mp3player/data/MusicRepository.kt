@@ -34,6 +34,7 @@ object MusicRepository {
             add(MediaStore.Audio.Media.TRACK)
             add(MediaStore.Audio.Media.YEAR)
             add(MediaStore.Audio.Media.DISPLAY_NAME)
+            add(MediaStore.Audio.Media.MIME_TYPE)
             if (hasGenreColumn) add(MediaStore.Audio.Media.GENRE)
         }.toTypedArray()
 
@@ -53,6 +54,7 @@ object MusicRepository {
             val iTrack = cur.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
             val iYear = cur.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
             val iName = cur.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+            val iMime = cur.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE)
             val iGenre = if (hasGenreColumn) cur.getColumnIndex(MediaStore.Audio.Media.GENRE) else -1
 
             while (cur.moveToNext()) {
@@ -70,6 +72,8 @@ object MusicRepository {
                     track = cur.getInt(iTrack),
                     year = cur.getInt(iYear),
                     uri = ContentUris.withAppendedId(collection, id),
+                    mimeType = cur.getString(iMime).orEmpty(),
+                    fileName = fileName,
                 )
             }
         }

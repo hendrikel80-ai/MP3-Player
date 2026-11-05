@@ -88,6 +88,7 @@ class UiActions(
     val openPlaylist: (Long) -> Unit,
     val openPlayer: () -> Unit,
     val addToPlaylist: (List<Song>) -> Unit,
+    val editTags: (List<Song>) -> Unit,
     val back: () -> Unit,
 )
 
@@ -194,6 +195,9 @@ fun SongMenuItems(songs: List<Song>, actions: UiActions, close: () -> Unit, show
     DropdownMenuItem(text = { Text("Als Nächstes abspielen") }, onClick = { actions.vm.playNext(songs); close() })
     DropdownMenuItem(text = { Text("Zur Warteschlange hinzufügen") }, onClick = { actions.vm.addToQueue(songs); close() })
     DropdownMenuItem(text = { Text("Zu Playlist hinzufügen…") }, onClick = { actions.addToPlaylist(songs); close() })
+    if (songs.any { it.isMp3 }) {
+        DropdownMenuItem(text = { Text("Metadaten bearbeiten…") }, onClick = { close(); actions.editTags(songs) })
+    }
     val song = songs.singleOrNull()
     if (showNavigation && song != null) {
         DropdownMenuItem(

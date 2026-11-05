@@ -52,4 +52,4 @@ Hersteller (Samsung, Xiaomi, Google Pixel …) leicht abweichen.
 | Zugriff versehentlich abgelehnt | In der App **App-Einstellungen öffnen** → Berechtigungen → **Musik und Audio** → Zulassen. |
 | Keine Steuerung auf dem Sperrbildschirm | Einstellungen → Apps → MP3 Player → Benachrichtigungen einschalten. |
 | Musik stoppt im Hintergrund (v. a. Xiaomi/Huawei) | Einstellungen → Apps → MP3 Player → Akku → **Nicht einschränken**. |
-| Genre fehlt / falscher Künstler | Die Infos kommen aus den MP3-Tags. Am PC z. B. mit *Mp3tag* korrigieren. |
+| Genre fehlt / falscher Künstler | In der App über ⋮ → **Metadaten bearbeiten** korrigieren. Android fragt beim Speichern, ob die App die Datei ändern darf → **Zulassen**. |

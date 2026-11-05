@@ -1,8 +1,10 @@
 package de.mp3player.ui
 
 import android.app.Application
+import android.content.IntentSender
 import android.database.ContentObserver
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
@@ -12,6 +14,8 @@ import de.mp3player.data.Library
 import de.mp3player.data.MusicRepository
 import de.mp3player.data.PlaylistStore
 import de.mp3player.data.Song
+import de.mp3player.data.tags.TagChanges
+import de.mp3player.data.tags.TagWriter
 import de.mp3player.playback.PlayerConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,6 +46,13 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val _messages = Channel<String>(Channel.BUFFERED)
     val messages = _messages.receiveAsFlow()
+
+    /** Systemdialog „Darf die App diese Dateien ändern?“, den die Oberfläche anzeigen muss. */
+    private val _writeApproval = MutableStateFlow<IntentSender?>(null)
+    val writeApproval = _writeApproval.asStateFlow()
+    private var pendingEdit: Pair<List<Song>, TagChanges>? = null
+    private var pendingWritten = 0
+    private var pendingSkipped = 0
 
     private var refreshJob: Job? = null
     private var observerRegistered = false
@@ -156,6 +167,64 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun moveInPlaylist(id: Long, song: Song, delta: Int) {
         viewModelScope.launch { playlistStore.moveSong(id, song.id, delta) }
+    }
+
+    // ---- Metadaten bearbeiten ----
+    fun editTags(songs: List<Song>, changes: TagChanges) {
+        val mp3 = songs.filter { it.isMp3 }
+        if (changes.isEmpty || mp3.isEmpty()) {
+            _messages.trySend("Keine Änderungen")
+            return
+        }
+        pendingEdit = mp3 to changes
+        pendingWritten = 0
+        pendingSkipped = songs.size - mp3.size
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+: einmal für alle Dateien um Erlaubnis bitten
+            _writeApproval.value = MediaStore.createWriteRequest(app.contentResolver, mp3.map { it.uri }).intentSender
+        } else {
+            runPendingEdit()
+        }
+    }
+
+    fun onWriteApprovalResult(granted: Boolean) {
+        _writeApproval.value = null
+        if (granted) {
+            runPendingEdit()
+        } else {
+            pendingEdit = null
+            _messages.trySend("Bearbeiten abgebrochen")
+        }
+    }
+
+    private fun runPendingEdit() {
+        val (songs, changes) = pendingEdit ?: return
+        viewModelScope.launch {
+            when (val result = TagWriter.write(app, songs, changes)) {
+                is TagWriter.Outcome.NeedsPermission -> {
+                    pendingWritten += result.written
+                    pendingEdit = result.remaining to changes
+                    _writeApproval.value = result.intentSender
+                }
+                is TagWriter.Outcome.Done -> {
+                    pendingEdit = null
+                    val written = pendingWritten + result.written
+                    val skipped = pendingSkipped + result.skipped
+                    _messages.trySend(
+                        buildString {
+                            append(if (written == 1) "Metadaten gespeichert" else "$written Titel aktualisiert")
+                            if (skipped > 0) append(" · $skipped übersprungen (keine MP3)")
+                            if (result.failed.isNotEmpty()) {
+                                append(" · ${result.failed.size} fehlgeschlagen: ${result.failed.first().second}")
+                            }
+                        },
+                    )
+                    // Musikbibliothek neu einlesen, sobald Android die Dateien neu gescannt hat
+                    delay(1500)
+                    refresh(silent = true)
+                }
+            }
+        }
     }
 
     override fun onCleared() {

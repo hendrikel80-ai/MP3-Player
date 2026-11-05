@@ -11,6 +11,10 @@ Ein einfacher, werbefreier Musik-Player für die MP3s auf deinem Android-Handy.
   Auf jeder Künstler-/Album-/Genre-Seite gibt es außerdem „Als Playlist speichern“.
 - **Eigene Playlists**: erstellen, umbenennen, löschen, Titel hinzufügen (⋮-Menü bei jedem Song),
   Reihenfolge ändern und Titel entfernen.
+- **Metadaten bearbeiten**: Titel, Künstler, Album, Genre, Jahr und Track-Nr. direkt in der App ändern –
+  einzeln (⋮-Menü → „Metadaten bearbeiten“, oder ✏️ im Player) oder für ein ganzes Album/Künstler/Genre
+  auf einmal (✏️ oben rechts auf der Detailseite). Die Änderungen werden in die MP3-Datei (ID3-Tag)
+  geschrieben; Cover und andere Tags bleiben erhalten.
 - Wiedergabe im **Hintergrund** mit Steuerung in der Benachrichtigung, auf dem Sperrbildschirm,
   per Kopfhörer, Bluetooth und im Auto.
 - Zufallswiedergabe, Wiederholen (alle / einen), Warteschlange („Als Nächstes abspielen“), Suche.

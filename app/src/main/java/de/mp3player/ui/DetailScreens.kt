@@ -66,7 +66,15 @@ fun GroupDetailScreen(type: GroupType, key: String, actions: UiActions) {
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
-        topBar = { BackTopBar(group?.title ?: type.label, actions) },
+        topBar = {
+            BackTopBar(group?.title ?: type.label, actions) {
+                if (group != null && group.songs.any { it.isMp3 }) {
+                    IconButton(onClick = { actions.editTags(group.songs) }) {
+                        Icon(Icons.Filled.Edit, "Alle Titel bearbeiten")
+                    }
+                }
+            }
+        },
     ) { padding ->
         if (group == null) {
             Box(Modifier.padding(padding)) { EmptyState("Nichts gefunden") }

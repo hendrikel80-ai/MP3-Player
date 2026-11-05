@@ -1,12 +1,14 @@
 package de.mp3player.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.mp3player.data.GroupType
 import de.mp3player.data.Song
+import de.mp3player.data.tags.TagChanges
 import kotlinx.coroutines.launch
 
 @Composable
@@ -143,6 +146,23 @@ private fun MainScaffold(vm: MainViewModel) {
     val playerState by vm.playerState.collectAsStateWithLifecycle()
     val playlists by vm.playlists.collectAsStateWithLifecycle()
     var addSongs by remember { mutableStateOf<List<Song>?>(null) }
+    var editSongs by remember { mutableStateOf<List<Song>?>(null) }
+    var legacyEdit by remember { mutableStateOf<Pair<List<Song>, TagChanges>?>(null) }
+    val context = LocalContext.current
+
+    // Systemdialog „Darf MP3 Player diese Audiodateien ändern?“
+    val writeApproval by vm.writeApproval.collectAsStateWithLifecycle()
+    val approvalLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+        vm.onWriteApprovalResult(it.resultCode == Activity.RESULT_OK)
+    }
+    LaunchedEffect(writeApproval) {
+        writeApproval?.let { approvalLauncher.launch(IntentSenderRequest.Builder(it).build()) }
+    }
+    // Android 8/9: Schreibberechtigung für den Speicher
+    val legacyWriteLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
+        legacyEdit?.let { (songs, changes) -> if (ok) vm.editTags(songs, changes) }
+        legacyEdit = null
+    }
 
     LaunchedEffect(vm) {
         vm.messages.collect { msg ->
@@ -158,6 +178,7 @@ private fun MainScaffold(vm: MainViewModel) {
             openPlaylist = { id -> nav.navigate("playlist/$id") },
             openPlayer = { nav.navigate("player") { launchSingleTop = true } },
             addToPlaylist = { songs -> addSongs = songs },
+            editTags = { songs -> editSongs = songs },
             back = { nav.popBackStack() },
         )
     }
@@ -199,6 +220,25 @@ private fun MainScaffold(vm: MainViewModel) {
                 PlaylistDetailScreen(e.arguments?.getLong("id") ?: -1L, actions)
             }
             composable("player") { PlayerScreen(actions) }
+        }
+    }
+
+    editSongs?.let { songs ->
+        TagEditDialog(
+            songs = songs,
+            genres = library.genres.map { it.title }.filter { it != de.mp3player.data.MusicRepository.UNKNOWN_GENRE },
+            onDismiss = { editSongs = null },
+        ) { changes ->
+            editSongs = null
+            val needsLegacyPermission = Build.VERSION.SDK_INT <= Build.VERSION_CODES.P &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED
+            if (needsLegacyPermission) {
+                legacyEdit = songs to changes
+                legacyWriteLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            } else {
+                vm.editTags(songs, changes)
+            }
         }
     }
 

@@ -15,7 +15,12 @@ data class Song(
     val track: Int,
     val year: Int,
     val uri: Uri,
+    val mimeType: String = "",
+    val fileName: String = "",
 ) {
+    /** Nur MP3-Dateien (ID3-Tags) können bearbeitet werden. */
+    val isMp3: Boolean get() = mimeType == "audio/mpeg" || fileName.endsWith(".mp3", ignoreCase = true)
+
     val disc: Int get() = track / 1000
     val trackNo: Int get() = track % 1000
     val artUri: Uri get() = ContentUris.withAppendedId(ALBUM_ART_URI, albumId)

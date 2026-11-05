@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -129,6 +130,11 @@ private fun ColumnScope.PlayerBody(
                         song.album, style = MaterialTheme.typography.bodyMedium, maxLines = 1,
                         overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                }
+                if (song.isMp3) {
+                    IconButton(onClick = { actions.editTags(listOf(song)) }) {
+                        Icon(Icons.Filled.Edit, "Metadaten bearbeiten")
+                    }
                 }
                 IconButton(onClick = { actions.addToPlaylist(listOf(song)) }) {
                     Icon(Icons.Filled.PlaylistAdd, "Zu Playlist hinzufügen")
