@@ -65,5 +65,6 @@ jobs:
             und „Installation aus unbekannten Quellen“ erlauben.
 
             Funktionen: Bibliothek nach Titel, Künstler, Album und Genre · Playlists aus Metadaten ·
-            eigene Playlists · Hintergrund-Wiedergabe mit Steuerung in Benachrichtigung und Sperrbildschirm.
+            eigene Playlists · Metadaten (ID3-Tags) bearbeiten · Abspielgeschwindigkeit 0,25×–1× ·
+            Hintergrund-Wiedergabe mit Steuerung in Benachrichtigung und Sperrbildschirm.
           files: app/build/outputs/apk/release/*.apk
