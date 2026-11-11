@@ -75,7 +75,8 @@ jobs:
             Hintergrund-Wiedergabe mit Steuerung in Benachrichtigung und Sperrbildschirm.
 
             ♞ **Neu: Schach-App** – `Schach-release.apk` genauso installieren: gegen den Computer (10 Stufen),
-            zu zweit an einem Gerät oder online gegen echte Spieler über Lichess.
+            zu zweit an einem Gerät, online gegen echte Spieler über Lichess
+            und mit Schachtrainer (Eröffnungen, Mattaufgaben, Mattführung).
           files: |
             app/build/outputs/apk/release/*.apk
             chess/build/outputs/apk/release/*.apk

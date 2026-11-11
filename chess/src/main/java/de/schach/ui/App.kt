@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -62,6 +63,7 @@ fun ChessApp() {
     val nav = rememberNavController()
     val gameVm: GameViewModel = viewModel()
     val onlineVm: OnlineViewModel = viewModel()
+    val trainerVm: TrainerViewModel = viewModel()
     val online by onlineVm.state.collectAsStateWithLifecycle()
 
     // Online-Partie hat begonnen → direkt zum Brett
@@ -83,6 +85,7 @@ fun ChessApp() {
                     nav.navigate("game")
                 },
                 onOnline = { nav.navigate("online") },
+                onTrainer = { nav.navigate("trainer") },
             )
         }
         composable("setup") {
@@ -102,6 +105,16 @@ fun ChessApp() {
                 onNewComputerGame = { nav.navigate("setup") { popUpTo("home") } },
             )
         }
+        composable("trainer") {
+            TrainerHomeScreen(trainerVm, onBack = { nav.popBackStack() }, onOpen = { kind, id -> nav.navigate("trainer/${kind.name}/$id") })
+        }
+        composable(
+            "trainer/{kind}/{id}",
+            arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val kind = runCatching { ExerciseKind.valueOf(entry.arguments?.getString("kind").orEmpty()) }.getOrDefault(ExerciseKind.OPENING)
+            TrainerExerciseScreen(trainerVm, kind, entry.arguments?.getString("id").orEmpty(), onBack = { nav.popBackStack() })
+        }
         composable("online") {
             OnlineHomeScreen(onlineVm, onBack = { nav.popBackStack() }, onOpenGame = { nav.navigate("online/$it") })
         }
@@ -119,6 +132,7 @@ private fun HomeScreen(
     onComputer: () -> Unit,
     onLocal: () -> Unit,
     onOnline: () -> Unit,
+    onTrainer: () -> Unit,
 ) {
     val game by gameVm.state.collectAsStateWithLifecycle()
     Scaffold { pad ->
@@ -128,7 +142,7 @@ private fun HomeScreen(
         ) {
             Text("♞︎ Schach", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.Bold)
             Text(
-                "Spiele gegen den Computer in 10 Stufen, zu zweit an einem Handy oder online gegen echte Menschen.",
+                "Spiele gegen den Computer in 10 Stufen, zu zweit an einem Handy oder online gegen echte Menschen – und trainiere Eröffnungen und Mattbilder.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(4.dp))
@@ -140,6 +154,7 @@ private fun HomeScreen(
             }
             MenuCard(Icons.Filled.Computer, "Gegen den Computer", "10 Stufen von Anfänger bis Großmeister", onClick = onComputer)
             MenuCard(Icons.Filled.People, "Zu zweit an einem Gerät", "Abwechselnd ziehen – ideal am Küchentisch", onClick = onLocal)
+            MenuCard(Icons.Filled.School, "Schachtrainer", "Eröffnungen lernen, Mattaufgaben lösen, Mattführung üben", onClick = onTrainer)
             MenuCard(Icons.Filled.Public, "Online gegen echte Spieler", "Über Lichess: zufällige Gegner oder Freunde herausfordern", onClick = onOnline)
         }
     }

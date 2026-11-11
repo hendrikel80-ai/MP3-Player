@@ -10,6 +10,18 @@ Schach-App mit drei Spielarten:
   zufälligen Gegner mit ähnlicher Spielstärke suchen, einen Freund per Benutzername herausfordern,
   Herausforderungen annehmen, gewertet oder ungewertet, mit Schachuhr, Remis-Angebot und Aufgeben.
 
+- **Schachtrainer**
+  - **Eröffnungen** (12): Italienisch, Spanisch, Schottisch, Damengambit, Londoner System, Englisch
+    (als Weiß) sowie Sizilianisch, Französisch, Caro-Kann, Skandinavisch, Königsindisch und
+    „Schäfermatt abwehren“ (als Schwarz). Erst **ansehen** – jeder Zug mit Erklärung – dann **üben**:
+    du spielst deine Seite, der Computer die andere; nach zwei Fehlversuchen wird der richtige Zug gezeigt.
+  - **Mattaufgaben** (12): typische Mattbilder mit Turm, Dame, Läufer, Springer und Bauer
+    (Grundreihenmatt, ersticktes Matt, arabisches Matt, Bodens Matt, Treppenmatt, Philidors Matt …),
+    Matt in 1 und Matt in 2. Jeder mattsetzende Zug wird akzeptiert, im Matt in 2 verteidigt der Computer.
+  - **Mattführung** (6): König + Dame, zwei Türme, Turm, zwei Läufer, Läufer + Springer und
+    Bauer zur Dame – gegen den verteidigenden Computer, mit Schritt-für-Schritt-Anleitung, Tipp und Zug zurück.
+  - Geschaffte Übungen bekommen einen grünen Haken.
+
 Alle Regeln sind umgesetzt: Rochade, en passant, Umwandlung (Auswahl der Figur), Schach/Matt/Patt,
 50-Züge-Regel, dreifache Stellungswiederholung und ungenügendes Material.
 
@@ -43,6 +55,7 @@ Hinweise:
 ```
 chess/src/main/java/de/schach/
 ├── engine/   Board (Regeln, Züge, FEN, SAN), Engine (Suche + Spielstufen), Eval
+├── training/ Eröffnungen, Mattaufgaben, Mattführungen (Daten) + Prüfung „erzwingt Matt?“
 ├── online/   LichessClient, OnlineViewModel
 └── ui/       Startmenü, Stufenauswahl, Brett, Partie- und Online-Bildschirme
 ```

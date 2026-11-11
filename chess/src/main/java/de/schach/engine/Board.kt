@@ -495,6 +495,12 @@ class Board {
         return legalMoves().firstOrNull { Move.from(it) == from && Move.to(it) == to && Move.promo(it) == promo }
     }
 
+    /** Findet einen legalen Zug aus SAN mit englischen Buchstaben (z. B. "Nf3", "exd5", "O-O"). */
+    fun parseSan(san: String): Int? {
+        val clean = san.trim().trimEnd('+', '#', '!', '?')
+        return legalMoves().firstOrNull { toSan(it).trimEnd('+', '#') == clean }
+    }
+
     /** Standard-Algebraische Notation, z. B. "Sf3" wird als "Nf3" geliefert; die Oberfläche übersetzt die Buchstaben. */
     fun toSan(m: Int): String {
         val from = Move.from(m)
