@@ -1,8 +1,5 @@
 # 🎵 MP3 Player für Android
 
-> ♞ **Neu im Repo:** eine Schach-App (gegen den Computer in 10 Stufen, zu zweit oder online gegen echte Spieler) –
-> siehe [chess/README.md](chess/README.md). Sie wird automatisch mitgebaut (Artifact **Schach-APK**).
-
 Ein einfacher, werbefreier Musik-Player für die MP3s auf deinem Android-Handy.
 
 ## Funktionen
