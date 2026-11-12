@@ -24,18 +24,18 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Album
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.QueueMusic
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Album
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.QueueMusic
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -73,11 +73,11 @@ import de.mp3player.data.Song
 import de.mp3player.playback.PlayerState
 
 enum class HomeTab(val label: String, val icon: ImageVector) {
-    SONGS("Titel", Icons.Filled.MusicNote),
-    ARTISTS("Künstler", Icons.Filled.Person),
-    ALBUMS("Alben", Icons.Filled.Album),
-    GENRES("Genres", Icons.Filled.Category),
-    PLAYLISTS("Playlists", Icons.Filled.QueueMusic),
+    SONGS("Titel", Icons.Outlined.MusicNote),
+    ARTISTS("Künstler", Icons.Outlined.Person),
+    ALBUMS("Alben", Icons.Outlined.Album),
+    GENRES("Genres", Icons.Outlined.Category),
+    PLAYLISTS("Playlists", Icons.Outlined.QueueMusic),
 }
 
 @Composable
@@ -117,19 +117,19 @@ fun HomeScreen(tab: HomeTab, actions: UiActions) {
                 navigationIcon = {
                     if (searching) {
                         IconButton(onClick = { searching = false; query = "" }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Suche schließen")
+                            Icon(Icons.Outlined.ArrowBack, contentDescription = "Suche schließen")
                         }
                     }
                 },
                 actions = {
                     if (searching && query.isNotEmpty()) {
-                        IconButton(onClick = { query = "" }) { Icon(Icons.Filled.Close, "Leeren") }
+                        IconButton(onClick = { query = "" }) { Icon(Icons.Outlined.Close, "Leeren") }
                     }
                     if (!searching && tab != HomeTab.PLAYLISTS) {
-                        IconButton(onClick = { searching = true }) { Icon(Icons.Filled.Search, "Suchen") }
+                        IconButton(onClick = { searching = true }) { Icon(Icons.Outlined.Search, "Suchen") }
                     }
                     Box {
-                        IconButton(onClick = { menuOpen = true }) { Icon(Icons.Filled.MoreVert, "Menü") }
+                        IconButton(onClick = { menuOpen = true }) { Icon(Icons.Outlined.MoreVert, "Menü") }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             DropdownMenuItem(
                                 text = { Text("Musik neu einlesen") },
@@ -181,7 +181,7 @@ private fun SongsTab(songs: List<Song>, player: PlayerState, actions: UiActions)
                 enabled = songs.isNotEmpty(),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
-                Icon(Icons.Filled.Shuffle, null)
+                Icon(Icons.Outlined.Shuffle, null)
                 Spacer(Modifier.width(8.dp))
                 Text("Alle ${songs.size} Titel zufällig")
             }
@@ -245,12 +245,12 @@ private fun PlaylistsTab(playlists: List<Playlist>, library: Library, actions: U
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Button(onClick = { showCreate = true }, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Add, null)
+                    Icon(Icons.Outlined.Add, null)
                     Spacer(Modifier.width(6.dp))
                     Text("Neue Playlist", maxLines = 1)
                 }
                 OutlinedButton(onClick = { showMeta = true }, enabled = library.songs.isNotEmpty(), modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.AutoAwesome, null)
+                    Icon(Icons.Outlined.AutoAwesome, null)
                     Spacer(Modifier.width(6.dp))
                     Text("Aus Metadaten", maxLines = 1)
                 }
@@ -280,7 +280,7 @@ private fun PlaylistsTab(playlists: List<Playlist>, library: Library, actions: U
                 leadingContent = { AlbumArt(songs.firstOrNull(), Modifier.size(52.dp)) },
                 trailingContent = {
                     Box {
-                        IconButton(onClick = { menuOpen = true }) { Icon(Icons.Filled.MoreVert, "Mehr") }
+                        IconButton(onClick = { menuOpen = true }) { Icon(Icons.Outlined.MoreVert, "Mehr") }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             DropdownMenuItem(text = { Text("Abspielen") }, enabled = songs.isNotEmpty(),
                                 onClick = { menuOpen = false; vm.play(songs) })

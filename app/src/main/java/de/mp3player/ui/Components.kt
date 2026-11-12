@@ -10,6 +10,7 @@ import android.util.LruCache
 import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +30,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.PlaylistAdd
+import androidx.compose.material.icons.outlined.Shuffle
+import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -78,6 +79,7 @@ import de.mp3player.data.MediaGroup
 import de.mp3player.data.Playlist
 import de.mp3player.data.Song
 import de.mp3player.playback.PlayerState
+import de.mp3player.ui.theme.Studio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -128,7 +130,7 @@ object ArtLoader {
 }
 
 @Composable
-fun AlbumArt(song: Song?, modifier: Modifier = Modifier, sizePx: Int = 160, corner: Dp = 6.dp) {
+fun AlbumArt(song: Song?, modifier: Modifier = Modifier, sizePx: Int = 160, corner: Dp = 4.dp) {
     val context = LocalContext.current
     val art by produceState(
         initialValue = song?.let { ArtLoader.cached(it, sizePx) },
@@ -139,7 +141,8 @@ fun AlbumArt(song: Song?, modifier: Modifier = Modifier, sizePx: Int = 160, corn
     Box(
         modifier
             .clip(RoundedCornerShape(corner))
-            .background(MaterialTheme.colorScheme.secondaryContainer),
+            .background(Studio.PanelAlt)
+            .border(1.dp, Studio.Border, RoundedCornerShape(corner)),
         contentAlignment = Alignment.Center,
     ) {
         val bmp = art
@@ -147,8 +150,8 @@ fun AlbumArt(song: Song?, modifier: Modifier = Modifier, sizePx: Int = 160, corn
             Image(bmp, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
         } else {
             Icon(
-                Icons.Filled.MusicNote, contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                Icons.Outlined.MusicNote, contentDescription = null,
+                tint = Studio.Gold,
                 modifier = Modifier.fillMaxSize(0.5f),
             )
         }
@@ -180,7 +183,7 @@ fun SongRow(
         trailingContent = {
             Box {
                 IconButton(onClick = { menuOpen = true }) {
-                    Icon(Icons.Filled.MoreVert, contentDescription = "Mehr")
+                    Icon(Icons.Outlined.MoreVert, contentDescription = "Mehr")
                 }
                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                     menu { menuOpen = false }
@@ -248,12 +251,12 @@ fun CollectionHeader(
         Spacer(Modifier.height(16.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { actions.vm.play(songs) }, enabled = songs.isNotEmpty(), modifier = Modifier.weight(1f)) {
-                Icon(Icons.Filled.PlayArrow, null)
+                Icon(Icons.Outlined.PlayArrow, null)
                 Spacer(Modifier.width(6.dp))
                 Text("Abspielen")
             }
             FilledTonalButton(onClick = { actions.vm.shuffle(songs) }, enabled = songs.isNotEmpty(), modifier = Modifier.weight(1f)) {
-                Icon(Icons.Filled.Shuffle, null)
+                Icon(Icons.Outlined.Shuffle, null)
                 Spacer(Modifier.width(6.dp))
                 Text("Zufall")
             }
@@ -267,13 +270,17 @@ fun CollectionHeader(
 @Composable
 fun MiniPlayer(song: Song, state: PlayerState, actions: UiActions) {
     Surface(
-        tonalElevation = 3.dp,
+        color = Studio.Panel,
         modifier = Modifier.fillMaxWidth().clickable(onClick = actions.openPlayer),
     ) {
         Column {
             LinearProgressIndicator(
                 progress = { if (state.durationMs > 0) (state.positionMs.toFloat() / state.durationMs).coerceIn(0f, 1f) else 0f },
                 modifier = Modifier.fillMaxWidth().height(2.dp),
+                color = Studio.Sunburst,
+                trackColor = Studio.Border,
+                gapSize = 0.dp,
+                drawStopIndicator = {},
             )
             Row(
                 Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -292,12 +299,12 @@ fun MiniPlayer(song: Song, state: PlayerState, actions: UiActions) {
                 }
                 IconButton(onClick = actions.vm::playPause) {
                     Icon(
-                        if (state.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                        if (state.isPlaying) Icons.Outlined.Pause else Icons.Outlined.PlayArrow,
                         contentDescription = if (state.isPlaying) "Pause" else "Abspielen",
                     )
                 }
                 IconButton(onClick = actions.vm::next) {
-                    Icon(Icons.Filled.SkipNext, contentDescription = "Nächster Titel")
+                    Icon(Icons.Outlined.SkipNext, contentDescription = "Nächster Titel")
                 }
             }
         }
@@ -364,7 +371,7 @@ fun AddToPlaylistDialog(
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(enabled = newName.isNotBlank(), onClick = { onCreate(newName.trim()) }) {
-                        Icon(Icons.Filled.PlaylistAdd, contentDescription = "Erstellen")
+                        Icon(Icons.Outlined.PlaylistAdd, contentDescription = "Erstellen")
                     }
                 }
                 if (playlists.isNotEmpty()) {
@@ -472,8 +479,8 @@ fun EmptyState(text: String, action: (@Composable () -> Unit)? = null) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            Icons.Filled.MusicNote, null, Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            Icons.Outlined.MusicNote, null, Modifier.size(64.dp),
+            tint = Studio.Gold,
         )
         Spacer(Modifier.height(12.dp))
         Text(text, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)

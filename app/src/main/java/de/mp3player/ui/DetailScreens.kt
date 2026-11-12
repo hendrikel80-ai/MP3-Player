@@ -17,11 +17,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.PlaylistAdd
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -43,13 +43,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.mp3player.data.GroupType
+import de.mp3player.ui.theme.EyebrowStyle
 
 @Composable
 private fun BackTopBar(title: String, actions: UiActions, extra: @Composable () -> Unit = {}) {
     TopAppBar(
         title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         navigationIcon = {
-            IconButton(onClick = actions.back) { Icon(Icons.Filled.ArrowBack, "Zurück") }
+            IconButton(onClick = actions.back) { Icon(Icons.Outlined.ArrowBack, "Zurück") }
         },
         actions = { extra() },
     )
@@ -70,7 +71,7 @@ fun GroupDetailScreen(type: GroupType, key: String, actions: UiActions) {
             BackTopBar(group?.title ?: type.label, actions) {
                 if (group != null && group.songs.any { it.isMp3 }) {
                     IconButton(onClick = { actions.editTags(group.songs) }) {
-                        Icon(Icons.Filled.Edit, "Alle Titel bearbeiten")
+                        Icon(Icons.Outlined.Edit, "Alle Titel bearbeiten")
                     }
                 }
             }
@@ -90,12 +91,12 @@ fun GroupDetailScreen(type: GroupType, key: String, actions: UiActions) {
                     CollectionHeader(group.title, "${type.label} · ${group.subtitle}", group.cover, group.songs, actions) {
                         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             TextButton(onClick = { saving = true }) {
-                                Icon(Icons.Filled.Save, null)
+                                Icon(Icons.Outlined.Save, null)
                                 Spacer(Modifier.width(6.dp))
                                 Text("Als Playlist speichern")
                             }
                             TextButton(onClick = { actions.addToPlaylist(group.songs) }) {
-                                Icon(Icons.Filled.PlaylistAdd, null)
+                                Icon(Icons.Outlined.PlaylistAdd, null)
                                 Spacer(Modifier.width(6.dp))
                                 Text("Zu Playlist…")
                             }
@@ -106,7 +107,7 @@ fun GroupDetailScreen(type: GroupType, key: String, actions: UiActions) {
                     item {
                         Column {
                         Text(
-                            "Alben", style = MaterialTheme.typography.titleMedium,
+                            "Alben", style = EyebrowStyle,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                         )
                         LazyRow(
@@ -167,8 +168,8 @@ fun PlaylistDetailScreen(id: Long, actions: UiActions) {
         topBar = {
             BackTopBar(playlist?.name ?: "Playlist", actions) {
                 if (playlist != null) {
-                    IconButton(onClick = { renaming = true }) { Icon(Icons.Filled.Edit, "Umbenennen") }
-                    IconButton(onClick = { deleting = true }) { Icon(Icons.Filled.Delete, "Löschen") }
+                    IconButton(onClick = { renaming = true }) { Icon(Icons.Outlined.Edit, "Umbenennen") }
+                    IconButton(onClick = { deleting = true }) { Icon(Icons.Outlined.Delete, "Löschen") }
                 }
             }
         },

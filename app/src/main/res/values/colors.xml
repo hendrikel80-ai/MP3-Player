@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#FFFFFBFE</color>
-    <color name="ic_launcher_background">#FF5B3FD6</color>
+    <!-- Pocket Studio „Sunburst Stage“ -->
+    <color name="background">#FF0D0B09</color>
+    <color name="ic_launcher_background">#FF0D0B09</color>
 </resources>

@@ -98,3 +98,10 @@ Dann auf GitHub: **Settings → Secrets and variables → Actions → New reposi
 | `KEY_PASSWORD`      | dasselbe Passwort                      |
 
 Die `release.keystore` gut aufheben und **nie** ins Repo committen.
+
+## Design & Schriften
+
+Die Oberfläche nutzt das Design „Pocket Studio – Sunburst Stage“ (dunkel, Gold und Sunburst-Orange).
+Schriften: [Bebas Neue](https://github.com/dharmatype/Bebas-Neue) und
+[Source Sans 3](https://github.com/adobe-fonts/source-sans), beide unter der SIL Open Font License
+(siehe `licenses/`).

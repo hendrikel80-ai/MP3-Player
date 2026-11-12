@@ -22,12 +22,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -59,6 +61,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.mp3player.data.GroupType
 import de.mp3player.data.Song
+import de.mp3player.ui.theme.Studio
 import de.mp3player.data.tags.TagChanges
 import kotlinx.coroutines.launch
 
@@ -115,7 +118,7 @@ private fun PermissionScreen(asked: Boolean, onRequest: () -> Unit, onSettings: 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Icon(Icons.Filled.LibraryMusic, null, Modifier.size(80.dp), tint = MaterialTheme.colorScheme.primary)
+            Icon(Icons.Outlined.LibraryMusic, null, Modifier.size(80.dp), tint = Studio.Gold)
             Spacer(Modifier.height(24.dp))
             Text("Zugriff auf deine Musik", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(12.dp))
@@ -192,13 +195,21 @@ private fun MainScaffold(vm: MainViewModel) {
                 Column {
                     if (currentSong != null) MiniPlayer(currentSong, playerState, actions)
                     if (route == "home") {
-                        NavigationBar {
+                        HorizontalDivider(color = Studio.Border)
+                        NavigationBar(containerColor = Studio.Panel, tonalElevation = 0.dp) {
                             HomeTab.entries.forEach { t ->
                                 NavigationBarItem(
                                     selected = t == tab,
                                     onClick = { tab = t },
                                     icon = { Icon(t.icon, contentDescription = null) },
                                     label = { Text(t.label, maxLines = 1) },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = Studio.OnAccent,
+                                        indicatorColor = Studio.Sunburst,
+                                        selectedTextColor = Studio.SunburstHi,
+                                        unselectedIconColor = Studio.TextDim,
+                                        unselectedTextColor = Studio.TextDim,
+                                    ),
                                 )
                             }
                         }
