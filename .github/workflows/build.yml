@@ -3,11 +3,15 @@ name: APK bauen
 on:
   push:
     branches: ['**']
-    tags: ['v*']
+    tags: ['v*', 'speicherputz-v*']
   workflow_dispatch:
     inputs:
       release_tag:
         description: 'Release erstellen mit dieser Version (z. B. v1.0.0) – leer lassen für nur bauen'
+        required: false
+        default: ''
+      speicherputz_release_tag:
+        description: 'Speicherputz-Release erstellen mit dieser Version (z. B. speicherputz-v1.0.0) – leer lassen für nur bauen'
         required: false
         default: ''
 
@@ -50,8 +54,14 @@ jobs:
           name: MP3-Player-APK
           path: app/build/outputs/apk/release/*.apk
 
+      - name: Speicherputz-APK hochladen
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: Speicherputz-APK
+          path: cleaner/build/outputs/apk/release/*.apk
+
       - name: Release veröffentlichen (bei Tags v* oder manuell)
-        if: startsWith(github.ref, 'refs/tags/v') || inputs.release_tag != ''
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ inputs.release_tag || github.ref_name }}
@@ -68,3 +78,20 @@ jobs:
             eigene Playlists · Metadaten (ID3-Tags) bearbeiten · Abspielgeschwindigkeit 0,25×–1× ·
             Hintergrund-Wiedergabe mit Steuerung in Benachrichtigung und Sperrbildschirm.
           files: app/build/outputs/apk/release/*.apk
+
+      - name: Speicherputz-Release veröffentlichen (bei Tags speicherputz-v* oder manuell)
+        if: startsWith(github.ref, 'refs/tags/speicherputz-v') || (github.event_name == 'workflow_dispatch' && inputs.speicherputz_release_tag != '')
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        with:
+          tag_name: ${{ inputs.speicherputz_release_tag || github.ref_name }}
+          name: Speicherputz ${{ inputs.speicherputz_release_tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          make_latest: false
+          body: |
+            🧹 **Speicherputz** – findet unsichtbare, überflüssige Dateien und löscht nur, was du auswählst.
+
+            📱 **Anleitung:** https://github.com/${{ github.repository }}/blob/${{ github.sha }}/SPEICHERPUTZ.md
+
+            **Kurz:** Die Datei `Speicherputz-release.apk` unten herunterladen, auf dem Handy antippen
+            und „Installation aus unbekannten Quellen“ erlauben.
+          files: cleaner/build/outputs/apk/release/*.apk

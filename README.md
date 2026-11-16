@@ -1,5 +1,8 @@
 # 🎵 MP3 Player für Android
 
+> 🧹 **Neu in diesem Repo:** [Speicherputz](SPEICHERPUTZ.md) – eine zweite App, die unsichtbare, überflüssige
+> Dateien findet und nur löscht, was du auswählst.
+
 Ein einfacher, werbefreier Musik-Player für die MP3s auf deinem Android-Handy.
 
 ## Funktionen
